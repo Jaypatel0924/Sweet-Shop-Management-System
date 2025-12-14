@@ -7,6 +7,7 @@ export interface ISweet extends Document {
   quantity: number;
   description?: string;
   image?: string;
+  emoji?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -42,6 +43,11 @@ const sweetSchema = new Schema<ISweet>(
     image: {
       type: String,
       default: ''
+    },
+    emoji: {
+      type: String,
+      default: '🍬',
+      trim: true
     }
   },
   { timestamps: true }

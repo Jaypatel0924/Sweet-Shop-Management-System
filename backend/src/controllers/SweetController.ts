@@ -6,23 +6,27 @@ export class SweetController {
   // Create a new sweet (Admin only)
   async createSweet(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const { name, category, price, quantity, description, image } = req.body;
+      const { name, category, price, quantity, description, image, imageUrl, emoji, stock } = req.body;
 
       // Validate required fields
-      if (!name || !category || price === undefined || quantity === undefined) {
+      if (!name || !category || price === undefined || (quantity === undefined && stock === undefined)) {
         res.status(400).json({ 
-          message: 'Name, category, price, and quantity are required' 
+          message: 'Name, category, price, and quantity (or stock) are required' 
         });
         return;
       }
+
+      // Use 'stock' if provided, otherwise 'quantity'
+      const finalQuantity = stock !== undefined ? stock : quantity;
 
       const sweet = await SweetService.createSweet({
         name,
         category,
         price,
-        quantity,
+        quantity: finalQuantity,
         description,
-        image
+        image: imageUrl || image,
+        emoji: emoji || '🍬'
       });
 
       res.status(201).json({

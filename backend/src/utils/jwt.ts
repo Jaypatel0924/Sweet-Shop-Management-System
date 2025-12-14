@@ -1,4 +1,4 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
 
 export interface DecodedToken extends JwtPayload {
   userId: string;
@@ -7,12 +7,11 @@ export interface DecodedToken extends JwtPayload {
 
 const generateToken = (userId: string, isAdmin: boolean): string => {
   const secret = process.env.JWT_SECRET || 'your_jwt_secret_key_here';
-  const expiry = process.env.JWT_EXPIRY || '7d';
   
   return jwt.sign(
     { userId, isAdmin },
     secret,
-    { expiresIn: expiry }
+    { expiresIn: '7d' } as SignOptions
   );
 };
 

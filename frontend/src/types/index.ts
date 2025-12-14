@@ -6,6 +6,7 @@ export interface Sweet {
   quantity: number;
   description?: string;
   image?: string;
+  emoji?: string;
   createdAt: string;
   updatedAt: string;
 }

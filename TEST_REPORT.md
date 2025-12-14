@@ -407,7 +407,7 @@ The Sweet Shop Management System has a solid testing foundation with:
 
 ---
 
-**Test Report Generated**: December 2024  
+**Test Report Generated**: December 2025  
 **Framework**: Jest  
 **Total Tests**: 20  
 **Pass Rate**: 100%

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Sweet } from '../types';
 import { useAuth } from '../context/AuthContext';
-import apiService from '../services/api';
 
 interface SweetCardProps {
   sweet: Sweet;
@@ -32,7 +31,6 @@ export const SweetCard: React.FC<SweetCardProps> = ({ sweet, onPurchase, onEdit,
 
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to delete this sweet?')) return;
-    
     try {
       if (onDelete) {
         await onDelete(sweet._id);
@@ -43,80 +41,136 @@ export const SweetCard: React.FC<SweetCardProps> = ({ sweet, onPurchase, onEdit,
     }
   };
 
+  const isInStock = sweet.quantity > 0;
+  const stockPercentage = (sweet.quantity / 100) * 100;
+
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-      {sweet.image && (
-        <img
-          src={sweet.image}
-          alt={sweet.name}
-          className="w-full h-48 object-cover bg-gray-200"
-        />
-      )}
-      {!sweet.image && <div className="w-full h-48 bg-gradient-to-br from-pink-300 to-purple-300" />}
-
-      <div className="p-4">
-        <h3 className="text-xl font-bold text-gray-800">{sweet.name}</h3>
-        <p className="text-gray-600 text-sm mb-2">{sweet.category}</p>
-
-        {sweet.description && (
-          <p className="text-gray-600 text-sm mb-3">{sweet.description}</p>
+    <div
+      className="card-elevated overflow-hidden group animate-fade-in hover:shadow-xl"
+    >
+      {/* Image Container */}
+      <div className="relative overflow-hidden bg-gray-100 h-48">
+        {sweet.image && (
+          <img
+            src={sweet.image}
+            alt={sweet.name}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          />
+        )}
+        {!sweet.image && (
+          <div className="w-full h-full bg-gradient-candy flex items-center justify-center text-4xl">
+            {sweet.emoji || '🍬'}
+          </div>
         )}
 
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-2xl font-bold text-purple-600">₹{sweet.price}</span>
-          <span className={`text-sm font-semibold ${sweet.quantity > 0 ? 'text-green-600' : 'text-red-600'}`}>
-            Stock: {sweet.quantity}
-          </span>
+        {/* Stock Badge */}
+        <div className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold text-white ${isInStock ? 'bg-green-500' : 'bg-red-500'}`}>
+          {isInStock ? '✓ In Stock' : '✗ Out of Stock'}
         </div>
 
+        {/* Category Badge */}
+        <div className="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur rounded-full text-xs font-semibold text-candy-purple">
+          {sweet.category}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-5">
+        {/* Name */}
+        <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:gradient-text transition">
+          {sweet.name}
+        </h3>
+
+        {/* Description */}
+        {sweet.description && (
+          <p className="text-gray-600 text-sm mb-3 line-clamp-2">{sweet.description}</p>
+        )}
+
+        {/* Price and Stock */}
+        <div className="flex items-end justify-between mb-4">
+          <div>
+            <p className="text-xs text-gray-500 mb-1">Price</p>
+            <p className="text-3xl font-bold gradient-text">₹{sweet.price.toFixed(2)}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs text-gray-500 mb-1">Stock</p>
+            <p className="text-lg font-bold text-gray-800">{sweet.quantity}</p>
+          </div>
+        </div>
+
+        {/* Stock Bar */}
+        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+          <div
+            className={`h-full transition-all duration-500 ${
+              stockPercentage > 50
+                ? 'bg-gradient-to-r from-green-400 to-green-500'
+                : stockPercentage > 25
+                ? 'bg-gradient-to-r from-yellow-400 to-yellow-500'
+                : 'bg-gradient-to-r from-red-400 to-red-500'
+            }`}
+            style={{ width: `${Math.min(stockPercentage, 100)}%` }}
+          ></div>
+        </div>
+
+        {/* Error */}
         {error && (
-          <div className="bg-red-100 text-red-700 px-2 py-1 rounded text-sm mb-2">
-            {error}
+          <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg animate-fade-in">
+            <p className="text-red-700 font-semibold text-xs">{error}</p>
           </div>
         )}
 
-        {sweet.quantity > 0 && (
-          <div className="flex gap-2 mb-3">
-            <input
-              type="number"
-              min="1"
-              max={sweet.quantity}
-              value={quantity}
-              onChange={(e) => setQuantity(Math.min(parseInt(e.target.value) || 1, sweet.quantity))}
-              className="w-16 px-2 py-1 border border-gray-300 rounded"
-            />
-            <button
-              onClick={handlePurchase}
-              disabled={loading}
-              className="flex-1 bg-green-500 text-white font-semibold py-1 rounded hover:bg-green-600 transition disabled:bg-gray-400"
-            >
-              {loading ? 'Purchasing...' : 'Buy'}
-            </button>
+        {/* Purchase Section */}
+        {isInStock ? (
+          <div className="space-y-3">
+            <div className="flex gap-2">
+              <input
+                type="number"
+                min="1"
+                max={sweet.quantity}
+                value={quantity}
+                onChange={(e) => setQuantity(Math.min(parseInt(e.target.value) || 1, sweet.quantity))}
+                className="w-16 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-candy-purple focus:ring-2 focus:ring-purple-500/20 font-semibold"
+              />
+              <button
+                onClick={handlePurchase}
+                disabled={loading}
+                className="flex-1 btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <>
+                    <span className="animate-spin">🛒</span> Processing...
+                  </>
+                ) : (
+                  <>
+                    🛒 Buy Now
+                  </>
+                )}
+              </button>
+            </div>
           </div>
-        )}
-
-        {sweet.quantity === 0 && (
+        ) : (
           <button
             disabled
-            className="w-full bg-gray-300 text-gray-600 font-semibold py-2 rounded cursor-not-allowed"
+            className="w-full py-3 bg-gray-200 text-gray-600 font-semibold rounded-lg cursor-not-allowed"
           >
             Out of Stock
           </button>
         )}
 
+        {/* Admin Actions */}
         {user?.isAdmin && (
-          <div className="flex gap-2 mt-3 pt-3 border-t">
+          <div className="flex gap-2 mt-4 pt-4 border-t border-gray-200">
             <button
               onClick={() => onEdit && onEdit(sweet)}
-              className="flex-1 bg-blue-500 text-white font-semibold py-1 rounded hover:bg-blue-600 transition"
+              className="flex-1 btn-secondary text-blue-600 border-blue-600 hover:bg-blue-50"
             >
-              Edit
+              ✏️ Edit
             </button>
             <button
               onClick={handleDelete}
-              className="flex-1 bg-red-500 text-white font-semibold py-1 rounded hover:bg-red-600 transition"
+              className="flex-1 btn-secondary text-red-600 border-red-600 hover:bg-red-50"
             >
-              Delete
+              🗑️ Delete
             </button>
           </div>
         )}

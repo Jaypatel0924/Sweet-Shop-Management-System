@@ -6,7 +6,7 @@ class ApiService {
 
   constructor() {
     this.api = axios.create({
-      baseURL: 'http://localhost:5000/api',
+      baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -20,6 +20,20 @@ class ApiService {
       }
       return config;
     });
+
+    // Add error response handler
+    this.api.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          // Clear token on unauthorized response
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.href = '/login';
+        }
+        return Promise.reject(error);
+      }
+    );
   }
 
   // Auth endpoints
@@ -95,6 +109,32 @@ class ApiService {
 
   async restockSweet(id: string, quantity: number): Promise<SweetResponse> {
     const response = await this.api.post(`/sweets/${id}/restock`, { quantity });
+    return response.data;
+  }
+
+  // Order endpoints
+  async createOrder(orderData: any): Promise<any> {
+    const response = await this.api.post('/orders', orderData);
+    return response.data;
+  }
+
+  async verifyPayment(paymentData: any): Promise<any> {
+    const response = await this.api.post('/orders/verify-payment', paymentData);
+    return response.data;
+  }
+
+  async getOrderById(orderId: string): Promise<any> {
+    const response = await this.api.get(`/orders/${orderId}`);
+    return response.data;
+  }
+
+  async getUserOrders(): Promise<any> {
+    const response = await this.api.get('/orders/my-orders');
+    return response.data;
+  }
+
+  async getAllOrders(): Promise<any> {
+    const response = await this.api.get('/orders');
     return response.data;
   }
 }

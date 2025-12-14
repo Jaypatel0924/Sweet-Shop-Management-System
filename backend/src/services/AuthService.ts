@@ -25,7 +25,13 @@ export class AuthService {
 
   // Login user
   async login(email: string, password: string): Promise<IUser> {
-    const user = await User.findOne({ email }).select('+password');
+    // Handle admin prefix (for admin-only verification if needed)
+    let loginEmail = email;
+    if (email.startsWith('admin_')) {
+      loginEmail = email.substring(6); // Remove 'admin_' prefix
+    }
+
+    const user = await User.findOne({ email: loginEmail }).select('+password');
 
     if (!user) {
       throw new Error('User not found');

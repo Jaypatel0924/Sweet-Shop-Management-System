@@ -459,10 +459,10 @@ export const Dashboard: React.FC<DashboardProps> = () => {
             <div className="animate-fade-in">
               <h4 className="font-bold mb-4 text-yellow-400">Contact Info</h4>
               <p className="text-gray-300 flex items-center gap-2 mb-2">
-                <Phone size={16} /> +91 98765 43210
+                <Phone size={16} /> +91 98765 23504
               </p>
               <p className="text-gray-300 flex items-center gap-2 mb-2">
-                <Mail size={16} /> info@omsweets.com
+                <Mail size={16} /> info@omsweet&co.com
               </p>
               <p className="text-gray-300 flex items-center gap-2">
                 <MapPin size={16} /> New Delhi, India
@@ -470,7 +470,7 @@ export const Dashboard: React.FC<DashboardProps> = () => {
             </div>
           </div>
           <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 OM SWEETS. All rights reserved. Crafted with love 💛</p>
+            <p>&copy; 2025 OM SWEETS & CO. All rights reserved. Crafted with love 💛</p>
           </div>
         </div>
       </footer>

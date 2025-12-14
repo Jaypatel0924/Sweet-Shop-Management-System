@@ -569,6 +569,6 @@ For issues and questions, please create an issue in the repository.
 
 ---
 
-**Built with ❤️ using GitHub Copilot**
+**Built with Jay ❤️**
 
 *This project demonstrates modern full-stack development practices with emphasis on clean code, testing, and responsible AI usage in software development.*

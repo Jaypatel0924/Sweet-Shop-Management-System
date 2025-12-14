@@ -697,4 +697,4 @@ curl -X POST http://localhost:5000/api/sweets/{sweet_id}/purchase \
 ---
 
 **API Version:** 1.0.0  
-**Last Updated:** December 2024
+**Last Updated:** December 2025

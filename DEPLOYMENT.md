@@ -567,7 +567,7 @@ app.use((req, res, next) => {
 ---
 
 **Deployment Guide Version**: 1.0  
-**Last Updated**: December 2024
+**Last Updated**: December 2025
 
 For questions or issues with deployment, refer to service-specific documentation:
 - [Heroku Docs](https://devcenter.heroku.com/)

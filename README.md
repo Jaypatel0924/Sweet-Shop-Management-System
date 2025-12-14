@@ -2,7 +2,7 @@
 
 A full-stack web application for managing a sweet shop with user authentication, inventory management, professional shopping cart, order tracking, and admin features. Built with React/TypeScript frontend, Node.js/Express backend, MongoDB database, and Tailwind CSS.
 
-## ⭐ Latest Updates (December 2024)
+## ⭐ Latest Updates (December 2025)
 
 ### ✅ Critical Issues Fixed
 - **Dashboard ReferenceError** - Fixed missing state declarations (filteredSweets, error)
